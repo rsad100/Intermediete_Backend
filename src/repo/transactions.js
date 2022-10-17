@@ -3,7 +3,7 @@ const postgreDb = require("../config/postgre");
 const getTransactions = () => {
   return new Promise((resolve, reject) => {
     const query =
-      "select id_transaction, products.name_product, products.price, amount, address, phone_number from transactions INNER JOIN products ON transactions.id_product=products.id_product INNER JOIN users on transactions.id_user=users.id_user";
+      "select id_transaction, products.name_product, products.price, amount, address, phone_number from transactions INNER JOIN products ON transactions.id_product=products.id_product INNER JOIN users ON transactions.id_user=users.id_user INNER JOIN userdata ON users.id_user=userdata.id_user";
     postgreDb.query(query, (err, result) => {
       if (err) {
         console.log(err);
@@ -16,18 +16,34 @@ const getTransactions = () => {
 
 const createTransactions = (body) => {
   return new Promise((resolve, reject) => {
+    const { id_product, amount, id_user, id_payment } = body;
     const query =
-      "insert into transactions ( id_product, amount, id_user ) values ($1,$2,$3)";
-    const { id_product, amount, id_user } = body;
+      "insert into transactions ( id_product, amount, id_user, id_payment ) values ($1,$2,$3,$4)";
     postgreDb.query(
       query,
-      [id_product, amount, id_user],
+      [id_product, amount, id_user, id_payment],
       (err, queryResult) => {
         if (err) {
           console.log(err);
           return reject(err);
         }
         resolve(queryResult);
+        const querySum = `select sum(amount) from transactions where id_product=${id_product}`;
+        postgreDb.query(querySum, (err, res) => {
+          if (err) {
+            console.log(err);
+            return reject(err);
+          }
+          console.log(res.rows[0].sum);
+          total = res.rows[0].sum;
+          const queryUpdate = `update products set sold = ${total} where id_product=${id_product}`;
+          postgreDb.query(queryUpdate, (err, res) => {
+            if (err) {
+              console.log(err);
+              return reject(err);
+            }
+          });
+        });
       }
     );
   });

@@ -13,9 +13,15 @@ const get = async (req, res) => {
 
 const create = async (req, res) => {
   try {
+    //console.log(req.file);
+    if (req.file) {
+      image_product = `/images/${req.file.filename}`;
+    }
     const response = await productsRepo.createProducts(req.body);
     res.response;
-    res.status(201).json({ result: "Data Created Successfully" });
+    res
+      .status(201)
+      .json({ result: "Data Created Successfully", file: req.file });
   } catch (err) {
     res.status(500).json({ msg: "Internal Server Error" });
   }
@@ -23,10 +29,16 @@ const create = async (req, res) => {
 
 const edit = async (req, res) => {
   try {
+    new_image = false;
+    if (req.file) {
+      console.log(req.file);
+      new_image = `/images/${req.file.filename}`;
+    }
     const response = await productsRepo.editProducts(req.body, req.params);
     res.response;
     res.status(200).json({ msg: "Data Changed Successfully" });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };

@@ -37,6 +37,13 @@ const getProducts = (queryParams) => {
     if (queryParams.sort == "pricey") {
       query += ` order by price desc `;
     }
+    if (queryParams.page) {
+      let page = Number(queryParams.page);
+      let limit = Number(queryParams.limit);
+      let offset = (page - 1) * limit;
+      query += ` limit ${queryParams.limit} offset ${offset}`;
+      console.log(typeof queryParams.page);
+    }
 
     console.log(query);
     postgreDb.query(query, (err, result) => {
@@ -52,9 +59,8 @@ const getProducts = (queryParams) => {
 const createProducts = (body) => {
   return new Promise((resolve, reject) => {
     const query =
-      "insert into products (image_product, name_product, price, desc_product, size, delivery, starthours, endhours, stock, category, sold) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)";
+      "insert into products ( image_product, name_product, price, desc_product, size, delivery, starthours, endhours, stock, category, sold) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)";
     const {
-      image_product,
       name_product,
       price,
       desc_product,
@@ -95,10 +101,10 @@ const createProducts = (body) => {
 const editProducts = (body, params) => {
   return new Promise((resolve, reject) => {
     let query = "update products set ";
+    if (new_image) {
+      query += `image_product = '${new_image}',`;
+    }
     const values = [];
-    // {author, title, publisher}
-    // logika ini dibuat dengan mengasumsikan ada middleware validasi
-    // validasi untuk menghilangkan properti object dari body yang tidak diinginkan
     Object.keys(body).forEach((key, idx, array) => {
       if (idx === array.length - 1) {
         query += `${key} = $${idx + 1} where id_product = $${idx + 2}`;
@@ -108,10 +114,7 @@ const editProducts = (body, params) => {
       query += `${key} = $${idx + 1},`;
       values.push(body[key]);
     });
-    //   res.json({
-    //     query,
-    //     values,
-    //   });
+    console.log(query);
     postgreDb
       .query(query, values)
       .then((response) => {

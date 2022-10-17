@@ -17,6 +17,7 @@ const create = async (req, res) => {
     res.response;
     res.status(201).json({ msg: "Data Created Successfully" });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };

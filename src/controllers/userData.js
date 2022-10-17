@@ -1,8 +1,8 @@
-const promosRepo = require("../repo/promos");
+const userDataRepo = require("../repo/userData");
 
 const get = async (req, res) => {
   try {
-    const response = await promosRepo.getPromos(req.query);
+    const response = await userDataRepo.getUserData();
     res.status(200).json({
       result: response.rows,
     });
@@ -13,24 +13,24 @@ const get = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    image_promo = `/images/${req.file.filename}`;
-    const response = await promosRepo.createPromos(req.body);
+    console.log(req.file);
+    image_user = `/images/${req.file.filename}`;
+    const response = await userDataRepo.createUserData(req.body);
     res.reponse;
     res.status(201).json({ msg: "Data Created Successfully" });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };
 
 const edit = async (req, res) => {
   try {
-    image_promo = false;
+    image_user = false;
     if (req.file) {
       //console.log(req.file);
-      image_promo = `/images/${req.file.filename}`;
+      image_user = `/images/${req.file.filename}`;
     }
-    const response = await promosRepo.editPromos(req.body, req.params);
+    const response = await userDataRepo.editUserData(req.body, req.params);
     res.response;
     res.status(200).json({ msg: "Data Changed Successfully" });
   } catch (err) {
@@ -41,7 +41,7 @@ const edit = async (req, res) => {
 
 const drop = async (req, res) => {
   try {
-    const result = await promosRepo.deletePromos(req.params);
+    const result = await userDataRepo.deleteUserData(req.params);
     res.reponse;
     res.status(200).json({ msg: "Data Deleted Successfully" });
   } catch (err) {
@@ -49,11 +49,11 @@ const drop = async (req, res) => {
   }
 };
 
-const promosController = {
+const userDataController = {
   get,
   create,
   edit,
   drop,
 };
 
-module.exports = promosController;
+module.exports = userDataController;

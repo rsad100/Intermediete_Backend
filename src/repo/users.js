@@ -1,9 +1,10 @@
+const db = require("../config/postgre");
 const postgreDb = require("../config/postgre");
+const bcrypt = require("bcrypt");
 
 const getUsers = () => {
   return new Promise((resolve, reject) => {
-    const query =
-      "select id_user, email, password, phone_number, address, display_name, first_name, last_name, birthday, gender, image_user from users";
+    const query = "select * from users";
     postgreDb.query(query, (err, result) => {
       if (err) {
         console.log(err);
@@ -17,33 +18,11 @@ const getUsers = () => {
 const createUsers = (body) => {
   return new Promise((resolve, reject) => {
     const query =
-      "insert into users ( email, password, phone_number, address, display_name, first_name, last_name, birthday, gender, image_user) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)";
-    const {
-      email,
-      password,
-      phone_number,
-      address,
-      display_name,
-      first_name,
-      last_name,
-      birthday,
-      gender,
-      image_user,
-    } = body;
+      "insert into users ( email, password, phone_number, role) values ($1,$2,$3,$4)";
+    const { email, password, phone_number, role } = body;
     postgreDb.query(
       query,
-      [
-        email,
-        password,
-        phone_number,
-        address,
-        display_name,
-        first_name,
-        last_name,
-        birthday,
-        gender,
-        image_user,
-      ],
+      [email, password, phone_number, role],
       (err, queryResult) => {
         if (err) {
           console.log(err);
@@ -93,11 +72,102 @@ const deleteUsers = (params) => {
   });
 };
 
+const registerUsers = (body) => {
+  return new Promise((resolve, reject) => {
+    const { phone_number, email, password } = body;
+
+    // validasi (email tidak boleh duplikat)
+    // 1. cek apakah email di body ada di db
+    // 2. kalo ada, maka reject status 400 bad request
+    // 3. kalo tidak, lanjut hash
+    // Hash Password
+    query = "SELECT email FROM users";
+    db.query(query, (err, result) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+
+      //Check email
+      const emails = result.rows;
+      let mapped = emails.map((emails) => emails.email);
+      let found = mapped.includes(email);
+
+      if (!found) {
+        bcrypt.hash(password, 10, (err, hashedPassword) => {
+          if (err) {
+            console.log(err);
+            return reject(err);
+          }
+          const query =
+            "INSERT INTO users (phone_number, email, password, role) VALUES ($1, $2, $3, 'user') RETURNING id_user";
+          const values = [phone_number, email, hashedPassword];
+          db.query(query, values, (err, result) => {
+            if (err) {
+              console.log(err);
+              return reject(err);
+            }
+            return resolve(result);
+          });
+        });
+      } else {
+        err = new Error("Email Already Exist");
+        console.log(err);
+        return reject(err);
+      }
+    });
+  });
+};
+
+const editPassword = (body) => {
+  return new Promise((resolve, reject) => {
+    const { old_password, new_password, user_id } = body;
+    const getPwdQuery = "SELECT password FROM users WHERE id_user = $1";
+    const getPwdValues = [user_id];
+    db.query(getPwdQuery, getPwdValues, (err, response) => {
+      if (err) {
+        console.log(err);
+        return reject({ err });
+      }
+      const hashedPassword = response.rows[0].password;
+      bcrypt.compare(old_password, hashedPassword, (err, isSame) => {
+        if (err) {
+          console.log(err);
+          return reject({ err });
+        }
+        if (!isSame)
+          return reject({
+            err: new Error("Old Password is Wrong"),
+            statusCode: 403,
+          });
+        bcrypt.hash(new_password, 10, (err, newHashedPassword) => {
+          if (err) {
+            console.log(err);
+            return reject({ err });
+          }
+          const editPwdQuery =
+            "UPDATE users SET password = $1 WHERE id_user = $2";
+          const editPwdValues = [newHashedPassword, user_id];
+          db.query(editPwdQuery, editPwdValues, (err, response) => {
+            if (err) {
+              console.log(err);
+              return reject({ err });
+            }
+            return resolve(response);
+          });
+        });
+      });
+    });
+  });
+};
+
 const usersRepo = {
   getUsers,
   createUsers,
   editUsers,
   deleteUsers,
+  registerUsers,
+  editPassword,
 };
 
 module.exports = usersRepo;

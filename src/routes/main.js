@@ -5,6 +5,10 @@ const usersRouter = require("./users");
 const productsRouter = require("./products");
 const promosRouter = require("./promos");
 const transactionsRouter = require("./transactions");
+const authRouter = require("./auth");
+const userDataRouter = require("./userData");
+
+const imageUpload = require("../middlewares/upload");
 
 const mainRouter = express.Router();
 
@@ -15,6 +19,12 @@ mainRouter.use(`${prefix}/users`, usersRouter);
 mainRouter.use(`${prefix}/products`, productsRouter);
 mainRouter.use(`${prefix}/promos`, promosRouter);
 mainRouter.use(`${prefix}/transactions`, transactionsRouter);
+mainRouter.use(`${prefix}/auth`, authRouter);
+mainRouter.use(`${prefix}/userdata`, userDataRouter);
+
+mainRouter.post(`/`, imageUpload.single("image"), (req, res) => {
+  res.json({ file: req.file, url: `/images/${req.file.filename}` });
+});
 
 //Homepage
 mainRouter.get("/", (req, res) => {

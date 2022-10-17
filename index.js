@@ -18,7 +18,7 @@ postgreDb
     // Untuk parsing body yang berbentuk json dan urlencoded
     server.use(express.json());
     server.use(express.urlencoded({ extended: false }));
-
+    server.use(express.static("./public"));
     // Semua request akan didelegasikan ke main router
     server.use(mainRouter);
 

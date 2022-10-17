@@ -25,7 +25,6 @@ const createPromos = (body) => {
     const query =
       "insert into promos ( image_promo, name_promo, normal_price, desc_promo, product_size, delivery, discount, start_date, end_date, code, id_product) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)";
     const {
-      image_promo,
       name_promo,
       normal_price,
       desc_promo,
@@ -66,6 +65,9 @@ const createPromos = (body) => {
 const editPromos = (body, params) => {
   return new Promise((resolve, reject) => {
     let query = "update promos set ";
+    if (image_promo) {
+      query += `image_promo = '${image_promo}',`;
+    }
     const values = [];
     Object.keys(body).forEach((key, idx, array) => {
       if (idx === array.length - 1) {
@@ -76,6 +78,7 @@ const editPromos = (body, params) => {
       query += `${key} = $${idx + 1},`;
       values.push(body[key]);
     });
+    console.log(query);
     postgreDb
       .query(query, values)
       .then((response) => {
