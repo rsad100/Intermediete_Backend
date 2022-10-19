@@ -78,6 +78,9 @@ const editPromos = (body, params) => {
       query += `${key} = $${idx + 1},`;
       values.push(body[key]);
     });
+    if (query == `update promos set image_promo = '${image_promo}',`) {
+      query = `update promos set image_promo = '${image_promo}' where id_promo = ${params.id}`;
+    }
     console.log(query);
     postgreDb
       .query(query, values)
@@ -85,7 +88,7 @@ const editPromos = (body, params) => {
         resolve(response);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         reject(err);
       });
   });

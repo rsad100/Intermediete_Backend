@@ -67,6 +67,9 @@ const editUserData = (body, params) => {
       query += `${key} = $${idx + 1},`;
       values.push(body[key]);
     });
+    if (query == `update userdata set image_user = '${image_user}',`) {
+      query = `update userdata set image_user = '${image_user}' where id_userdata = ${params.id}`;
+    }
     console.log(query);
     postgreDb
       .query(query, values)
@@ -74,7 +77,7 @@ const editUserData = (body, params) => {
         resolve(response);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         reject(err);
       });
   });

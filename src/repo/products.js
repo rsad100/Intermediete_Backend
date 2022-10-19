@@ -42,10 +42,10 @@ const getProducts = (queryParams) => {
       let limit = Number(queryParams.limit);
       let offset = (page - 1) * limit;
       query += ` limit ${queryParams.limit} offset ${offset}`;
-      console.log(typeof queryParams.page);
+      //console.log(typeof queryParams.page);
     }
 
-    console.log(query);
+    //console.log(query);
     postgreDb.query(query, (err, result) => {
       if (err) {
         console.log(err);
@@ -100,6 +100,7 @@ const createProducts = (body) => {
 
 const editProducts = (body, params) => {
   return new Promise((resolve, reject) => {
+    console.log(params);
     let query = "update products set ";
     if (new_image) {
       query += `image_product = '${new_image}',`;
@@ -114,6 +115,11 @@ const editProducts = (body, params) => {
       query += `${key} = $${idx + 1},`;
       values.push(body[key]);
     });
+
+    if (query == `update products set image_product = '${new_image}',`) {
+      query = `update products set image_product = '${new_image}' where id_product = ${params.id}`;
+    }
+
     console.log(query);
     postgreDb
       .query(query, values)
@@ -121,7 +127,7 @@ const editProducts = (body, params) => {
         resolve(response);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
         reject(err);
       });
   });

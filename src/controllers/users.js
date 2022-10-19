@@ -56,14 +56,22 @@ const register = (req, res) => {
       });
     })
     .catch((err) => {
-      res
-        .status(500)
-        .json({ msg: "Internal Server Error", error: err.message });
+      //console.log(err.message);
+      if (err.message == "Phone Number Already Exist") {
+        res.status(400).json({ error: err.message });
+      } else if (err.message == "Email Already Exist") {
+        res.status(400).json({ error: err.message });
+      } else {
+        res
+          .status(500)
+          .json({ msg: "Internal Server Error", error: err.message });
+      }
     });
 };
 
 const editPassword = (req, res) => {
   const { body } = req;
+  token = req.header("x-access-token");
   usersRepo
     .editPassword(body)
     .then((response) => {

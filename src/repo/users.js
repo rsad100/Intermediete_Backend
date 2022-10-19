@@ -1,6 +1,7 @@
 const db = require("../config/postgre");
 const postgreDb = require("../config/postgre");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const getUsers = () => {
   return new Promise((resolve, reject) => {
@@ -81,37 +82,59 @@ const registerUsers = (body) => {
     // 2. kalo ada, maka reject status 400 bad request
     // 3. kalo tidak, lanjut hash
     // Hash Password
-    query = "SELECT email FROM users";
-    db.query(query, (err, result) => {
+
+    queryPhone = "select phone_number from users";
+    db.query(queryPhone, (err, result) => {
       if (err) {
         console.log(err);
         return reject(err);
       }
-
-      //Check email
-      const emails = result.rows;
-      let mapped = emails.map((emails) => emails.email);
-      let found = mapped.includes(email);
-
-      if (!found) {
-        bcrypt.hash(password, 10, (err, hashedPassword) => {
+      //Check Phone Number
+      const phoneNumbers = result.rows;
+      let mapped_phone = phoneNumbers.map(
+        (phoneNumbers) => phoneNumbers.phone_number
+      );
+      //console.log(mapped_phone);
+      let found_phone = mapped_phone.includes(phone_number);
+      //console.log(found_phone);
+      if (!found_phone) {
+        query = "SELECT email FROM users";
+        db.query(query, (err, result) => {
           if (err) {
             console.log(err);
             return reject(err);
           }
-          const query =
-            "INSERT INTO users (phone_number, email, password, role) VALUES ($1, $2, $3, 'user') RETURNING id_user";
-          const values = [phone_number, email, hashedPassword];
-          db.query(query, values, (err, result) => {
-            if (err) {
-              console.log(err);
-              return reject(err);
-            }
-            return resolve(result);
-          });
+
+          //Check email
+          const emails = result.rows;
+          let mapped = emails.map((emails) => emails.email);
+          let found = mapped.includes(email);
+          console.log(found);
+          if (!found) {
+            bcrypt.hash(password, 10, (err, hashedPassword) => {
+              if (err) {
+                console.log(err);
+                return reject(err);
+              }
+              const query =
+                "INSERT INTO users (phone_number, email, password, role) VALUES ($1, $2, $3, 'user') RETURNING id_user";
+              const values = [phone_number, email, hashedPassword];
+              db.query(query, values, (err, result) => {
+                if (err) {
+                  console.log(err);
+                  return reject(err);
+                }
+                return resolve(result);
+              });
+            });
+          } else {
+            err = new Error("Email Already Exist");
+            console.log(err);
+            return reject(err);
+          }
         });
       } else {
-        err = new Error("Email Already Exist");
+        err = new Error("Phone Number Already Exist");
         console.log(err);
         return reject(err);
       }
@@ -121,9 +144,27 @@ const registerUsers = (body) => {
 
 const editPassword = (body) => {
   return new Promise((resolve, reject) => {
-    const { old_password, new_password, user_id } = body;
+    //console.log(token);
+
+    jwt.verify(
+      token,
+      process.env.SECRET_KEY,
+      { issuer: process.env.ISSUER },
+      (err, decodedPayload) => {
+        if (err) {
+          console.log(err);
+          return res.status(403).json({ msg: err.message, data: null });
+        }
+
+        // Payload akan ditempel ke object request
+        id = decodedPayload.user_id;
+      }
+    );
+    //console.log(id);
+
+    const { old_password, new_password } = body;
     const getPwdQuery = "SELECT password FROM users WHERE id_user = $1";
-    const getPwdValues = [user_id];
+    const getPwdValues = [id];
     db.query(getPwdQuery, getPwdValues, (err, response) => {
       if (err) {
         console.log(err);
@@ -147,7 +188,7 @@ const editPassword = (body) => {
           }
           const editPwdQuery =
             "UPDATE users SET password = $1 WHERE id_user = $2";
-          const editPwdValues = [newHashedPassword, user_id];
+          const editPwdValues = [newHashedPassword, id];
           db.query(editPwdQuery, editPwdValues, (err, response) => {
             if (err) {
               console.log(err);

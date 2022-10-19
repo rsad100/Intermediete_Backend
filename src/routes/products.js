@@ -10,7 +10,7 @@ const allowedRole = require("../middlewares/allowedRole");
 
 //const upload = imageUpload.single("image");
 
-productsRouter.get("/", isLogin(), allowedRole("user", "admin"), get);
+productsRouter.get("/", get);
 
 productsRouter.post(
   "/",
