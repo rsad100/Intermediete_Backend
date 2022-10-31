@@ -4,6 +4,12 @@ const imageUpload = require("../middlewares/upload");
 const isLogin = require("../middlewares/isLogin");
 const validate = require("../middlewares/validate");
 const allowedRole = require("../middlewares/allowedRole");
+const {
+  diskUpload,
+  memoryUpload,
+  errorHandler,
+} = require("../middlewares/upload");
+const multer = require("multer");
 
 const userDataRouter = express.Router();
 
@@ -25,7 +31,17 @@ userDataRouter.post(
     "image_user",
     "id_user"
   ),
-  imageUpload.single("image_user"),
+  function (req, res, next) {
+    diskUpload.single("image_user")(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        console.log(err);
+        return res.status(400).json({ msg: err.message });
+      } else if (err) {
+        return res.json({ msg: "Error Uploading File" });
+      }
+      next();
+    });
+  },
   create
 );
 
@@ -43,7 +59,17 @@ userDataRouter.patch(
     "image_user",
     "id_user"
   ),
-  imageUpload.single("image_user"),
+  function (req, res, next) {
+    diskUpload.single("image_user")(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        console.log(err);
+        return res.status(400).json({ msg: err.message });
+      } else if (err) {
+        return res.json({ msg: "Error Uploading File" });
+      }
+      next();
+    });
+  },
   edit
 );
 

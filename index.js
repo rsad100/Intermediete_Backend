@@ -1,5 +1,7 @@
 const express = require("express");
 
+const cors = require("cors");
+
 // import db
 const postgreDb = require("./src/config/postgre.js"); //src\config\postgre.js
 
@@ -19,6 +21,7 @@ postgreDb
     server.use(express.json());
     server.use(express.urlencoded({ extended: false }));
     server.use(express.static("./public"));
+    server.use(cors());
     // Semua request akan didelegasikan ke main router
     server.use(mainRouter);
 

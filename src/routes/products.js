@@ -4,6 +4,13 @@ const imageUpload = require("../middlewares/upload");
 const isLogin = require("../middlewares/isLogin");
 const validate = require("../middlewares/validate");
 const productsRouter = express.Router();
+const {
+  diskUpload,
+  memoryUpload,
+  errorHandler,
+} = require("../middlewares/upload");
+const cloudinaryUploader = require("../middlewares/cloudinary");
+const multer = require("multer");
 
 const { get, create, edit, drop } = require("../controllers/products");
 const allowedRole = require("../middlewares/allowedRole");
@@ -29,7 +36,18 @@ productsRouter.post(
     "category",
     "sold"
   ),
-  imageUpload.single("image_product"),
+  function (req, res, next) {
+    memoryUpload.single("image_product")(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        console.log(err);
+        return res.status(400).json({ msg: err.message });
+      } else if (err) {
+        return res.json({ msg: "Error Uploading File" });
+      }
+      next();
+    });
+  },
+  cloudinaryUploader,
   create
 );
 
@@ -50,7 +68,17 @@ productsRouter.patch(
     "category",
     "sold"
   ),
-  imageUpload.single("image_product"),
+  function (req, res, next) {
+    diskUpload.single("image_product")(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        console.log(err);
+        return res.status(400).json({ msg: err.message });
+      } else if (err) {
+        return res.json({ msg: "Error Uploading File" });
+      }
+      next();
+    });
+  },
   edit
 );
 
