@@ -15,7 +15,7 @@ const userDataRouter = express.Router();
 
 const { get, create, edit, drop } = require("../controllers/userData");
 
-userDataRouter.get("/", isLogin(), allowedRole("admin", "user"), get);
+userDataRouter.get("/", get);
 
 userDataRouter.post(
   "/",
