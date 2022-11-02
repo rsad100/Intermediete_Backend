@@ -8,7 +8,7 @@ const allowedRole = require("../middlewares/allowedRole");
 
 const { get, create, edit, drop } = require("../controllers/users");
 
-usersRouter.get("/", isLogin(), allowedRole("admin"), get);
+usersRouter.get("/", get);
 usersRouter.post("/register", usersController.register);
 
 usersRouter.patch(
