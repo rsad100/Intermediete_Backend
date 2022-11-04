@@ -47,18 +47,18 @@ userDataRouter.post(
 
 userDataRouter.patch(
   "/:id",
-  isLogin(),
-  allowedRole("admin", "user"),
-  validate.body(
-    "address",
-    "display_name",
-    "first_name",
-    "last_name",
-    "birthday",
-    "gender",
-    "image_user",
-    "id_user"
-  ),
+  // isLogin(),
+  // allowedRole("admin", "user"),
+  // validate.body(
+  //   "address",
+  //   "display_name",
+  //   "first_name",
+  //   "last_name",
+  //   "birthday",
+  //   "gender",
+  //   "image_user",
+  //   "id_user"
+  // ),
   function (req, res, next) {
     diskUpload.single("image_user")(req, res, function (err) {
       if (err instanceof multer.MulterError) {
