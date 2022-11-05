@@ -6,7 +6,8 @@ const validate = require("../middlewares/validate");
 const allowedRole = require("../middlewares/allowedRole");
 const { get, create, edit, drop } = require("../controllers/transactions");
 
-transactionsRouter.get("/", isLogin(), allowedRole("user", "admin"), get);
+// transactionsRouter.get("/", isLogin(), allowedRole("user", "admin"), get);
+transactionsRouter.get("/", get);
 
 //transactionsRouter.post("/", isLogin(), create);
 transactionsRouter.post(
