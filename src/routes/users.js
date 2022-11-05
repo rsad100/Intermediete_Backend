@@ -29,9 +29,9 @@ usersRouter.post(
 
 usersRouter.patch(
   "/:id",
-  isLogin(),
-  allowedRole("admin"),
-  validate.body("email", "password", "phone_number", "role"),
+  // isLogin(),
+  // allowedRole("admin"),
+  // validate.body("email", "password", "phone_number", "role"),
   edit
 );
 usersRouter.delete("/:id", isLogin(), allowedRole("admin"), drop);
