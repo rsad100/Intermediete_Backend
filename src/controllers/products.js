@@ -85,7 +85,7 @@ const edit = async (req, res) => {
     new_image = false;
     if (req.file) {
       console.log(req.file);
-      new_image = `/${req.file.public_id}.${req.file.format}`;
+      new_image = `${req.file.version}/${req.file.public_id}.${req.file.format}`;
     }
     const response = await productsRepo.editProducts(req.body, req.params);
     res.response;
