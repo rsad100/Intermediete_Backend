@@ -14,6 +14,9 @@ const uploader = async (req, res, next) => {
   if (body.name_product) {
     var fileName = `${body.name_product}`;
   }
+  if (body.name_promo) {
+    var fileName = `${body.name_promo}`;
+  }
   if (params.id) {
     var fileName = `${params.id}`;
   }
