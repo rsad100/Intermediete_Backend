@@ -3,14 +3,20 @@ const path = require("path");
 const cloudinary = require("../config/cloudinary");
 
 const uploader = async (req, res, next) => {
-  const { body, file } = req;
+  const { body, file, params } = req;
   if (!file) return next();
 
   const parser = new DatauriParser();
   const buffer = file.buffer;
   const ext = path.extname(file.originalname).toString();
   const datauri = parser.format(ext, buffer);
-  const fileName = `${body.name_product}`;
+  console.log(params.id);
+  if (body.name_product) {
+    var fileName = `${body.name_product}`;
+  }
+  if (params.id) {
+    var fileName = `${params.id}`;
+  }
   const cloudinaryOpt = {
     public_id: fileName,
     folder: "images",

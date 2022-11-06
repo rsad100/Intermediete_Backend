@@ -21,21 +21,21 @@ productsRouter.get("/", get);
 
 productsRouter.post(
   "/",
-  isLogin(),
-  allowedRole("admin"),
-  validate.body(
-    "image_product",
-    "name_product",
-    "price",
-    "desc_product",
-    "size",
-    "delivery",
-    "starthours",
-    "endhours",
-    "stock",
-    "category",
-    "sold"
-  ),
+  // isLogin(),
+  // allowedRole("admin"),
+  // validate.body(
+  //   "image_product",
+  //   "name_product",
+  //   "price",
+  //   "desc_product",
+  //   "size",
+  //   "delivery",
+  //   "starthours",
+  //   "endhours",
+  //   "stock",
+  //   "category",
+  //   "sold"
+  // ),
   function (req, res, next) {
     memoryUpload.single("image_product")(req, res, function (err) {
       if (err instanceof multer.MulterError) {

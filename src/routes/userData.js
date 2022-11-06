@@ -9,6 +9,7 @@ const {
   memoryUpload,
   errorHandler,
 } = require("../middlewares/upload");
+const cloudinaryUploader = require("../middlewares/cloudinary");
 const multer = require("multer");
 
 const userDataRouter = express.Router();
@@ -19,20 +20,20 @@ userDataRouter.get("/", get);
 
 userDataRouter.post(
   "/",
-  isLogin(),
-  allowedRole("admin", "user"),
-  validate.body(
-    "address",
-    "display_name",
-    "first_name",
-    "last_name",
-    "birthday",
-    "gender",
-    "image_user",
-    "id_user"
-  ),
+  // isLogin(),
+  // allowedRole("admin", "user"),
+  // validate.body(
+  //   "address",
+  //   "display_name",
+  //   "first_name",
+  //   "last_name",
+  //   "birthday",
+  //   "gender",
+  //   "image_user",
+  //   "id_user"
+  // ),
   function (req, res, next) {
-    diskUpload.single("image_user")(req, res, function (err) {
+    memoryUpload.single("image_user")(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         console.log(err);
         return res.status(400).json({ msg: err.message });
@@ -42,6 +43,7 @@ userDataRouter.post(
       next();
     });
   },
+  cloudinaryUploader,
   create
 );
 
@@ -60,7 +62,7 @@ userDataRouter.patch(
   //   "id_user"
   // ),
   function (req, res, next) {
-    diskUpload.single("image_user")(req, res, function (err) {
+    memoryUpload.single("image_user")(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         console.log(err);
         return res.status(400).json({ msg: err.message });
@@ -70,6 +72,7 @@ userDataRouter.patch(
       next();
     });
   },
+  cloudinaryUploader,
   edit
 );
 

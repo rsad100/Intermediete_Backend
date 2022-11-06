@@ -28,11 +28,11 @@ const edit = async (req, res) => {
     image_user = false;
     if (req.file) {
       //console.log(req.file);
-      image_user = `/images/${req.file.filename}`;
+      image_user = `/${req.file.public_id}.${req.file.format}`;
     }
     const response = await userDataRepo.editUserData(req.body, req.params);
     res.response;
-    res.status(200).json({ msg: "Data Changed Successfully" });
+    res.status(200).json({ msg: "Data Changed Successfully", file: req.file });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "Internal Server Error" });
