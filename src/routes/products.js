@@ -53,23 +53,23 @@ productsRouter.post(
 
 productsRouter.patch(
   "/:id",
-  isLogin(),
-  allowedRole("admin"),
-  validate.body(
-    "image_product",
-    "name_product",
-    "price",
-    "desc_product",
-    "size",
-    "delivery",
-    "starthours",
-    "endhours",
-    "stock",
-    "category",
-    "sold"
-  ),
+  // isLogin(),
+  // allowedRole("admin"),
+  // validate.body(
+  //   "image_product",
+  //   "name_product",
+  //   "price",
+  //   "desc_product",
+  //   "size",
+  //   "delivery",
+  //   "starthours",
+  //   "endhours",
+  //   "stock",
+  //   "category",
+  //   "sold"
+  // ),
   function (req, res, next) {
-    diskUpload.single("image_product")(req, res, function (err) {
+    memoryUpload.single("image_product")(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         console.log(err);
         return res.status(400).json({ msg: err.message });
@@ -79,6 +79,7 @@ productsRouter.patch(
       next();
     });
   },
+  cloudinaryUploader,
   edit
 );
 
