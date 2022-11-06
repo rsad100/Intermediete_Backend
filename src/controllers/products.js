@@ -64,7 +64,7 @@ const create = async (req, res) => {
     //console.log(req.file);
     console.log(req.file);
     if (req.file) {
-      image_product = `/${req.file.public_id}.${req.file.format}`;
+      image_product = `${req.file.version}/${req.file.public_id}.${req.file.format}`;
     }
     //console.log(image_product);
     const response = await productsRepo.createProducts(req.body);
