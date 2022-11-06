@@ -9,6 +9,7 @@ const {
   errorHandler,
 } = require("../middlewares/upload");
 const multer = require("multer");
+const cloudinaryUploader = require("../middlewares/cloudinary");
 
 const promosRouter = express.Router();
 
@@ -19,23 +20,23 @@ promosRouter.get("/", get);
 
 promosRouter.post(
   "/",
-  isLogin(),
-  allowedRole("admin"),
-  validate.body(
-    "image_promo",
-    "name_promo",
-    "normal_price",
-    "desc_promo",
-    "product_size",
-    "delivery",
-    "discount",
-    "start_date",
-    "end_date",
-    "code",
-    "id_product"
-  ),
+  // isLogin(),
+  // allowedRole("admin"),
+  // validate.body(
+  //   "image_promo",
+  //   "name_promo",
+  //   "normal_price",
+  //   "desc_promo",
+  //   "product_size",
+  //   "delivery",
+  //   "discount",
+  //   "start_date",
+  //   "end_date",
+  //   "code",
+  //   "id_product"
+  // ),
   function (req, res, next) {
-    diskUpload.single("image_promo")(req, res, function (err) {
+    memoryUpload.single("image_promo")(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         console.log(err);
         return res.status(400).json({ msg: err.message });
@@ -45,28 +46,29 @@ promosRouter.post(
       next();
     });
   },
+  cloudinaryUploader,
   create
 );
 
 promosRouter.patch(
   "/:id",
-  isLogin(),
-  allowedRole("admin"),
-  validate.body(
-    "image_promo",
-    "name_promo",
-    "normal_price",
-    "desc_promo",
-    "product_size",
-    "delivery",
-    "discount",
-    "start_date",
-    "end_date",
-    "code",
-    "id_product"
-  ),
+  // isLogin(),
+  // allowedRole("admin"),
+  // validate.body(
+  //   "image_promo",
+  //   "name_promo",
+  //   "normal_price",
+  //   "desc_promo",
+  //   "product_size",
+  //   "delivery",
+  //   "discount",
+  //   "start_date",
+  //   "end_date",
+  //   "code",
+  //   "id_product"
+  // ),
   function (req, res, next) {
-    diskUpload.single("image_promo")(req, res, function (err) {
+    memoryUpload.single("image_promo")(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         console.log(err);
         return res.status(400).json({ msg: err.message });
@@ -76,6 +78,7 @@ promosRouter.patch(
       next();
     });
   },
+  cloudinaryUploader,
   edit
 );
 

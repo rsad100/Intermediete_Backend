@@ -13,7 +13,7 @@ const get = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    image_promo = `/images/${req.file.filename}`;
+    image_promo = `${req.file.version}/${req.file.public_id}.${req.file.format}`;
     const response = await promosRepo.createPromos(req.body);
     res.reponse;
     res.status(201).json({ msg: "Data Created Successfully" });
@@ -28,7 +28,7 @@ const edit = async (req, res) => {
     image_promo = false;
     if (req.file) {
       //console.log(req.file);
-      image_promo = `/images/${req.file.filename}`;
+      image_promo = `${req.file.version}/${req.file.public_id}.${req.file.format}`;
     }
     const response = await promosRepo.editPromos(req.body, req.params);
     res.response;

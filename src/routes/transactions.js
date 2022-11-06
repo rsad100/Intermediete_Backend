@@ -20,9 +20,9 @@ transactionsRouter.post(
 
 transactionsRouter.patch(
   "/:id",
-  isLogin(),
-  allowedRole("user", "admin"),
-  validate.body("id_product", "amount", "id_user", "id_payment"),
+  // isLogin(),
+  // allowedRole("user", "admin"),
+  // validate.body("id_product", "amount", "id_user", "id_payment"),
   edit
 );
 
