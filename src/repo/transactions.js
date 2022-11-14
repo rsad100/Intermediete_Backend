@@ -16,12 +16,12 @@ const getTransactions = () => {
 
 const createTransactions = (body) => {
   return new Promise((resolve, reject) => {
-    const { id_product, amount, id_user, id_payment } = body;
+    const { id_product, amount, id_user, id_payment, status, size } = body;
     const query =
-      "insert into transactions ( id_product, amount, id_user, id_payment ) values ($1,$2,$3,$4)";
+      "insert into transactions ( id_product, amount, id_user, id_payment, status, size ) values ($1,$2,$3,$4,$5,$6)";
     postgreDb.query(
       query,
-      [id_product, amount, id_user, id_payment],
+      [id_product, amount, id_user, id_payment, status, size],
       (err, queryResult) => {
         if (err) {
           console.log(err);
