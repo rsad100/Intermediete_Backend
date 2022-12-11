@@ -2,7 +2,7 @@ const usersRepo = require("../repo/users");
 
 const get = async (req, res) => {
   try {
-    const response = await usersRepo.getUsers(req.body);
+    const response = await usersRepo.getUsers();
     res.status(200).json({
       result: response.rows,
     });
