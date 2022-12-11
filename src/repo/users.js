@@ -3,10 +3,10 @@ const postgreDb = require("../config/postgre");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const getUsers = () => {
+const getUsers = (body) => {
   return new Promise((resolve, reject) => {
-    const query = "select * from users";
-    postgreDb.query(query, (err, result) => {
+    const query = "select * from users WHERE id_user=$1";
+    postgreDb.query(query, [body.id], (err, result) => {
       if (err) {
         console.log(err);
         return reject(err);
