@@ -2,7 +2,7 @@ const transactionsRepo = require("../repo/transactions");
 
 const get = async (req, res) => {
   try {
-    const response = await transactionsRepo.getTransactions();
+    const response = await transactionsRepo.getTransactions(req.params);
     res.status(200).json({
       result: response.rows,
     });

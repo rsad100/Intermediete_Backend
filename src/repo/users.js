@@ -3,10 +3,11 @@ const postgreDb = require("../config/postgre");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const getUsers = () => {
+const getUsers = (params) => {
   return new Promise((resolve, reject) => {
-    const query = "select * from users";
-    postgreDb.query(query, (err, result) => {
+    const query = "select * from users where id_user=$1";
+    console.log(params);
+    postgreDb.query(query, [params.id], (err, result) => {
       if (err) {
         console.log(err);
         return reject(err);
@@ -38,6 +39,9 @@ const createUsers = (body) => {
 const editUsers = (body, params) => {
   return new Promise((resolve, reject) => {
     let query = "update users set ";
+    if (image_user) {
+      query += `image_user = '${image_user}',`;
+    }
     const values = [];
     Object.keys(body).forEach((key, idx, array) => {
       if (idx === array.length - 1) {
@@ -48,6 +52,10 @@ const editUsers = (body, params) => {
       query += `${key} = $${idx + 1},`;
       values.push(body[key]);
     });
+    if (query == `update users set image_user = '${image_user}',`) {
+      query = `update users set image_user = '${image_user}' where id_user = ${params.id}`;
+    }
+    // console.log(query);
     postgreDb
       .query(query, values)
       .then((response) => {
@@ -82,7 +90,6 @@ const registerUsers = (body) => {
     // 2. kalo ada, maka reject status 400 bad request
     // 3. kalo tidak, lanjut hash
     // Hash Password
-
     queryPhone = "select phone_number from users";
     db.query(queryPhone, (err, result) => {
       if (err) {

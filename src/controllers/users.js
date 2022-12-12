@@ -2,7 +2,7 @@ const usersRepo = require("../repo/users");
 
 const get = async (req, res) => {
   try {
-    const response = await usersRepo.getUsers();
+    const response = await usersRepo.getUsers(req.params);
     res.status(200).json({
       result: response.rows,
     });
@@ -23,6 +23,12 @@ const create = async (req, res) => {
 
 const edit = async (req, res) => {
   try {
+    image_user = false;
+    console.log(req.body);
+    if (req.file) {
+      // console.log(req.file);
+      image_user = `${req.file.version}/${req.file.public_id}.${req.file.format}`;
+    }
     const response = await usersRepo.editUsers(req.body, req.params);
     res.response;
     res.status(200).json({ msg: "Data Changed Successfully" });

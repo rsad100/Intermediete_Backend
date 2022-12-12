@@ -27,7 +27,7 @@ const edit = async (req, res) => {
   try {
     image_user = false;
     if (req.file) {
-      //console.log(req.file);
+      console.log(req.file);
       image_user = `${req.file.version}/${req.file.public_id}.${req.file.format}`;
     }
     const response = await userDataRepo.editUserData(req.body, req.params);
