@@ -2,7 +2,18 @@ const transactionsRepo = require("../repo/transactions");
 
 const get = async (req, res) => {
   try {
-    const response = await transactionsRepo.getTransactions(req.params);
+    const response = await transactionsRepo.getTransactions();
+    res.status(200).json({
+      result: response.rows,
+    });
+  } catch (err) {
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+};
+
+const getById = async (req, res) => {
+  try {
+    const response = await transactionsRepo.getTransactionsById(req.params);
     res.status(200).json({
       result: response.rows,
     });
@@ -50,6 +61,7 @@ const transactionsController = {
   create,
   edit,
   drop,
+  getById,
 };
 
 module.exports = transactionsController;

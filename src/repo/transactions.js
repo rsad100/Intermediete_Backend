@@ -1,6 +1,20 @@
 const postgreDb = require("../config/postgre");
 
-const getTransactions = (params) => {
+const getTransactions = () => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "select users.id_user,id_transaction, products.image_product, products.name_product, products.price, amount, users.address, phone_number, status, transactions.size from transactions INNER JOIN products ON transactions.id_product=products.id_product INNER JOIN users ON transactions.id_user=users.id_user";
+    postgreDb.query(query, (err, result) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+      return resolve(result);
+    });
+  });
+};
+
+const getTransactionsById = (params) => {
   return new Promise((resolve, reject) => {
     const query =
       "select users.id_user,id_transaction, products.image_product, products.name_product, products.price, amount, users.address, phone_number, status, transactions.size from transactions INNER JOIN products ON transactions.id_product=products.id_product INNER JOIN users ON transactions.id_user=users.id_user where transactions.id_user=$1";
@@ -92,6 +106,7 @@ const transactionsRepo = {
   createTransactions,
   editTransactions,
   deleteTransactions,
+  getTransactionsById,
 };
 
 module.exports = transactionsRepo;
