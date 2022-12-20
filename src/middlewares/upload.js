@@ -24,7 +24,7 @@ const diskUpload = multer({
     }
     callback(null, true);
   },
-  limits: { fileSize: 1000000 }, //Limit 1MB
+  limits: { fileSize: 5000000 }, //Limit 1MB
 });
 
 const memoryStorage = multer.memoryStorage();
