@@ -7,6 +7,7 @@ const promosRouter = require("./promos");
 const transactionsRouter = require("./transactions");
 const authRouter = require("./auth");
 const userDataRouter = require("./userData");
+const transactionsNewRouter = require("./transactionsNew");
 const {
   diskUpload,
   memoryUpload,
@@ -24,6 +25,7 @@ mainRouter.use(`${prefix}/promos`, promosRouter);
 mainRouter.use(`${prefix}/transactions`, transactionsRouter);
 mainRouter.use(`${prefix}/auth`, authRouter);
 mainRouter.use(`${prefix}/userdata`, userDataRouter);
+mainRouter.use(`${prefix}/transactionsnew`, transactionsNewRouter);
 
 mainRouter.post(`/`, diskUpload.single("image"), (req, res) => {
   res.json({ file: req.file, url: `/images/${req.file.filename}` });

@@ -33,6 +33,7 @@ const edit = async (req, res) => {
     res.response;
     res.status(200).json({ msg: "Data Changed Successfully" });
   } catch (err) {
+    console.log("test " + err);
     res.status(500).json({ msg: "Internal Server Error" });
   }
 };
