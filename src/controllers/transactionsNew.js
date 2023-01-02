@@ -36,6 +36,7 @@ const create = async (req, res) => {
 
 const createSub = async (req, res) => {
   try {
+    // console.log(req.body);
     const response = await transactionsNewRepo.createSubtransaction(req.body);
     res.response;
     res.status(201).json({ msg: "Data Created Successfully" });
