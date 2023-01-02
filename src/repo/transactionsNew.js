@@ -16,7 +16,7 @@ const getLatestTransactions = () => {
 const getTransactionsById = (params) => {
   return new Promise((resolve, reject) => {
     const query =
-      "select products.image_product, products.price, transactionsnew.id_transaction_new, amount, subtransaction.size, subtransaction.id_product, id_user, status FROM subtransaction INNER JOIN products ON subtransaction.id_product = products.id_product INNER JOIN transactionsnew ON subtransaction.id_transaction_new = transactionsnew.id_transaction_new where id_user=$1";
+      "select products.name_product, products.image_product, products.price, transactionsnew.id_transaction_new, amount, subtransaction.size, subtransaction.id_product, id_user, status FROM subtransaction INNER JOIN products ON subtransaction.id_product = products.id_product INNER JOIN transactionsnew ON subtransaction.id_transaction_new = transactionsnew.id_transaction_new where id_user=$1";
     postgreDb.query(query, [params.id], (err, result) => {
       if (err) {
         console.log(err);
