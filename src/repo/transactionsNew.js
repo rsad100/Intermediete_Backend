@@ -29,27 +29,31 @@ const getTransactionsById = (params) => {
 
 const createTransactions = (body) => {
   return new Promise((resolve, reject) => {
-    const { id_user, status } = body;
+    const { id_user, status, id_payment } = body;
     const query =
-      "insert into transactionsnew (id_user, status) values ($1,$2)";
-    postgreDb.query(query, [id_user, status], (err, queryResult) => {
-      if (err) {
-        console.log(err);
-        return reject(err);
+      "insert into transactionsnew (id_user, status,id_payment) values ($1,$2,$3)";
+    postgreDb.query(
+      query,
+      [id_user, status, id_payment],
+      (err, queryResult) => {
+        if (err) {
+          console.log(err);
+          return reject(err);
+        }
+        resolve(queryResult);
       }
-      resolve(queryResult);
-    });
+    );
   });
 };
 
 const createSubtransaction = (body) => {
   return new Promise((resolve, reject) => {
-    const { amount, id_payment, id_transaction_new, size } = body;
+    const { amount, id_transaction_new, size, id_product } = body;
     const query =
-      "insert into subtransaction (amount, id_payment,id_transaction_new, size) values ($1,$2,$3,$4)";
+      "insert into subtransaction (amount, id_transaction_new, size, id_product) values ($1,$2,$3,$4)";
     postgreDb.query(
       query,
-      [amount, id_payment, id_transaction_new, size],
+      [amount, id_transaction_new, size, id_product],
       (err, queryResult) => {
         if (err) {
           console.log(err);
