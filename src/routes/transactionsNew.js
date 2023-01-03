@@ -11,11 +11,13 @@ const {
   drop,
   createSub,
   getAll,
+  GetSubById,
 } = require("../controllers/transactionsNew");
 
 transactionsNewRouter.get("/", getLatest);
-transactionsNewRouter.get("/all/:id", getAll);
+transactionsNewRouter.get("/all", getAll);
 transactionsNewRouter.get("/:id", getById);
+transactionsNewRouter.get("/sub/:id", GetSubById);
 
 //transactionsRouter.post("/", isLogin(), create);
 transactionsNewRouter.post(
