@@ -14,7 +14,7 @@ const getLatest = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const response = await transactionsNewRepo.getAllTransactions();
+    const response = await transactionsNewRepo.getAllTransactions(req.params);
     res.status(200).json({
       result: response.rows,
     });

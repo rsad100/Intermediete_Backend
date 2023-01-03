@@ -13,11 +13,11 @@ const getLatestTransactions = () => {
   });
 };
 
-const getAllTransactions = () => {
+const getAllTransactions = (params) => {
   return new Promise((resolve, reject) => {
     const query =
-      "select products.name_product, products.image_product, products.price, transactionsnew.id_transaction_new, amount, subtransaction.size, subtransaction.id_product, id_user, status FROM subtransaction INNER JOIN products ON subtransaction.id_product = products.id_product INNER JOIN transactionsnew ON subtransaction.id_transaction_new = transactionsnew.id_transaction_new";
-    postgreDb.query(query, (err, result) => {
+      "select products.name_product, products.image_product, products.price, transactionsnew.id_transaction_new, amount, subtransaction.size, subtransaction.id_product, id_user, status FROM subtransaction INNER JOIN products ON subtransaction.id_product = products.id_product INNER JOIN transactionsnew ON subtransaction.id_transaction_new = transactionsnew.id_transaction_new LIMIT 1 OFFSET $1";
+    postgreDb.query(query, [params.id], (err, result) => {
       if (err) {
         console.log(err);
         return reject(err);
