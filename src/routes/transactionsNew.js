@@ -12,12 +12,15 @@ const {
   createSub,
   getAll,
   GetSubById,
+  edit,
 } = require("../controllers/transactionsNew");
 
 transactionsNewRouter.get("/", getLatest);
 transactionsNewRouter.get("/all", getAll);
 transactionsNewRouter.get("/:id", getById);
 transactionsNewRouter.get("/sub/:id", GetSubById);
+
+transactionsNewRouter.patch("/:id", edit);
 
 //transactionsRouter.post("/", isLogin(), create);
 transactionsNewRouter.post(

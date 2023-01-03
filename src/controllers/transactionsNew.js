@@ -74,10 +74,7 @@ const createSub = async (req, res) => {
 
 const edit = async (req, res) => {
   try {
-    const response = await transactionsNewRepo.editTransactions(
-      req.body,
-      req.params
-    );
+    const response = await transactionsNewRepo.markAsDone(req.params);
     res.response;
     res.status(200).json({ msg: "Data Changed Successfully" });
   } catch (err) {

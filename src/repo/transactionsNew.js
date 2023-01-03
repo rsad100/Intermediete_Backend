@@ -106,6 +106,20 @@ const deleteTransactions = (params) => {
   });
 };
 
+const markAsDone = (params) => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "update transactionsnew set status = 'Done' where id_transaction_new = $1";
+    postgreDb.query(query, [params.id], (err, result) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+      resolve(result);
+    });
+  });
+};
+
 const transactionsRepo = {
   getLatestTransactions,
   createTransactions,
@@ -114,6 +128,7 @@ const transactionsRepo = {
   getTransactionsById,
   getAllTransactions,
   getSubtransactionById,
+  markAsDone,
 };
 
 module.exports = transactionsRepo;
