@@ -13,6 +13,20 @@ const getLatestTransactions = () => {
   });
 };
 
+const getAllTransactions = () => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "select products.name_product, products.image_product, products.price, transactionsnew.id_transaction_new, amount, subtransaction.size, subtransaction.id_product, id_user, status FROM subtransaction INNER JOIN products ON subtransaction.id_product = products.id_product INNER JOIN transactionsnew ON subtransaction.id_transaction_new = transactionsnew.id_transaction_new";
+    postgreDb.query(query, (err, result) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+      return resolve(result);
+    });
+  });
+};
+
 const getTransactionsById = (params) => {
   return new Promise((resolve, reject) => {
     const query =
@@ -84,6 +98,7 @@ const transactionsRepo = {
   createSubtransaction,
   deleteTransactions,
   getTransactionsById,
+  getAllTransactions,
 };
 
 module.exports = transactionsRepo;

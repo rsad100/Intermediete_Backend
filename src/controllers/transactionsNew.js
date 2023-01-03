@@ -12,6 +12,18 @@ const getLatest = async (req, res) => {
   }
 };
 
+const getAll = async (req, res) => {
+  try {
+    const response = await transactionsNewRepo.getAllTransactions();
+    res.status(200).json({
+      result: response.rows,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+};
+
 const getById = async (req, res) => {
   try {
     const response = await transactionsNewRepo.getTransactionsById(req.params);
@@ -76,6 +88,7 @@ const transactionsController = {
   edit,
   drop,
   getById,
+  getAll,
 };
 
 module.exports = transactionsController;
