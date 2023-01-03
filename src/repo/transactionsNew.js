@@ -30,7 +30,7 @@ const getSubtransactionById = (params) => {
 const getAllTransactions = () => {
   return new Promise((resolve, reject) => {
     const query =
-      "select transactionsnew.id_user, status, id_payment, display_name from transactionsnew inner join users on transactionsnew.id_user = users.id_user ";
+      "select transactionsnew.id_user, status, id_payment, display_name, id_transaction_new from transactionsnew inner join users on transactionsnew.id_user = users.id_user ";
     postgreDb.query(query, (err, result) => {
       if (err) {
         console.log(err);
